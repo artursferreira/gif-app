@@ -1,4 +1,4 @@
-package com.artur.giphyapp.model
+package com.artur.giphyapp.data.remote.model
 
 data class Data(
     val id: String,

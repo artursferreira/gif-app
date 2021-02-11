@@ -1,6 +1,6 @@
-package com.artur.giphyapp.model
+package com.artur.giphyapp.data.remote.model
 
-data class FixedHeightSmallStill(
+data class Downsized(
     val height: String,
     val size: String,
     val url: String,
