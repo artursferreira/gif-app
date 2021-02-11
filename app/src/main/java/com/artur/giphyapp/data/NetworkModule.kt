@@ -1,7 +1,6 @@
 package com.artur.giphyapp.data
 
 import com.artur.giphyapp.BuildConfig
-import com.artur.giphyapp.manager.CoroutinesManager
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.dsl.module
@@ -13,7 +12,6 @@ val networkModule = module {
 
     factory { providesHttplogging() }
     factory { providesOkHttpClient(get()) }
-    single { CoroutinesManager() }
 
 }
 
@@ -21,7 +19,8 @@ fun provideRetrofit(okHttpClient: OkHttpClient, url: String): Retrofit {
     return Retrofit.Builder()
         .baseUrl(url)
         .client(okHttpClient)
-        .addConverterFactory(GsonConverterFactory.create()).build()
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
 }
 
 fun providesOkHttpClient(interceptor: HttpLoggingInterceptor): OkHttpClient {
