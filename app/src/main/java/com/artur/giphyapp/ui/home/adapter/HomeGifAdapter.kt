@@ -34,6 +34,7 @@ class HomeGifAdapter() : ListAdapter<GifItem, HomeGifAdapter.GifViewHolder>(obje
         fun bind(gifItem: GifItem) {
             with(itemBinding) {
                 Glide.with(gif.context).load(gifItem.url).into(gif)
+                favouriteButton.isSelected = gifItem.isFavourite
             }
         }
     }

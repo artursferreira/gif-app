@@ -22,8 +22,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/favourite"
-            tools:selected="true"
+            android:id="@+id/favourite_button"
             app:srcCompat="@drawable/ic_favourite_selector"
             android:layout_width="@dimen/favourite_button_size"
             android:layout_height="@dimen/favourite_button_size"
