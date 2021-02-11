@@ -3,7 +3,7 @@ package com.artur.giphyapp.ui
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.artur.giphyapp.ui.favorite.FavoriteFragment
+import com.artur.giphyapp.ui.favourite.FavouriteFragment
 import com.artur.giphyapp.ui.home.HomeFragment
 
 class FragmentAdapter(fragment: FragmentActivity) : FragmentStateAdapter(fragment) {
@@ -17,7 +17,7 @@ class FragmentAdapter(fragment: FragmentActivity) : FragmentStateAdapter(fragmen
                 HomeFragment()
             }
             1 -> {
-                FavoriteFragment()
+                FavouriteFragment()
             }
             else -> {
                 Fragment()

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="gif_default_height">200dp</dimen>
+    <dimen name="card_corner_radius">4dp</dimen>
+    <dimen name="gif_card_margin">2dp</dimen>
+    <dimen name="favourite_button_size">30dp</dimen>
+    <dimen name="favourite_button_margin">10dp</dimen>
+</resources>

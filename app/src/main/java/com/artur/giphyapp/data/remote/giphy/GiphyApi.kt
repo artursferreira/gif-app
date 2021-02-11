@@ -14,6 +14,14 @@ interface GiphyApi {
         @Query("rating") rating: String = GENERAL
     ): GifResult
 
+    @GET("v1/gifs/search")
+    suspend fun search(
+        @Query("api_key") apiKey: String = Config.KEY,
+        @Query("q") query: String?,
+        @Query("limit") limit: String = DEFAULT_LIMIT,
+        @Query("rating") rating: String = GENERAL
+    ): GifResult
+
     companion object {
         const val DEFAULT_LIMIT = "25"
         const val GENERAL = "g" //general audiences

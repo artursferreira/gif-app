@@ -5,14 +5,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Observer
+import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.GridLayoutManager
 import com.artur.giphyapp.data.remote.Status
 import com.artur.giphyapp.databinding.HomeFragmentBinding
 import com.artur.giphyapp.ui.home.adapter.HomeGifAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), SearchView.OnQueryTextListener {
 
     private var _binding: HomeFragmentBinding? = null
     private val binding get() = _binding!!
@@ -35,8 +35,25 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupRecyclerView()
+        binding.searchView.setOnQueryTextListener(this)
 
-        viewModel.getTrending().observe(viewLifecycleOwner, Observer {
+        getTrending()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    private fun setupRecyclerView() {
+        with(binding) {
+            recyclerview.layoutManager = GridLayoutManager(requireContext(), 2)
+            recyclerview.adapter = adapter
+        }
+    }
+
+    private fun getTrending() {
+        viewModel.getTrending().observe(viewLifecycleOwner, {
             it?.let { resource ->
                 when (resource.status) {
                     Status.LOADING -> {
@@ -59,15 +76,40 @@ class HomeFragment : Fragment() {
         })
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    override fun onQueryTextSubmit(query: String?): Boolean {
+        onTextSearched(query)
+        return true
     }
 
-    private fun setupRecyclerView() {
-        with(binding) {
-            recyclerview.layoutManager = GridLayoutManager(requireContext(), 2)
-            recyclerview.adapter = adapter
-        }
+    override fun onQueryTextChange(newText: String?): Boolean {
+        onTextSearched(newText)
+        return true
+    }
+
+    private fun onTextSearched(text: String?) {
+        if (!text.isNullOrEmpty())
+            viewModel.search(text).observe(viewLifecycleOwner, {
+                it?.let { resource ->
+                    when (resource.status) {
+                        Status.LOADING -> {
+                            with(binding) {
+                                progressCircular.visibility = View.VISIBLE
+                                recyclerview.visibility = View.GONE
+                            }
+                        }
+                        Status.SUCCESS -> {
+                            with(binding) {
+                                progressCircular.visibility = View.GONE
+                                recyclerview.visibility = View.VISIBLE
+                                adapter.submitList(resource.data)
+                            }
+                        }
+                        Status.ERROR -> {
+                        }
+                    }
+                }
+            })
+        else
+            getTrending()
     }
 }
