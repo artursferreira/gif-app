@@ -18,7 +18,8 @@ interface GifDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(vararg gif: GifItem)
 
-    //TODO delete all trending
+    @Query("DELETE from gifitem WHERE isTrending == 1")
+    fun deleteAllTrending()
 
     @Delete
     fun delete(gif: GifItem)
