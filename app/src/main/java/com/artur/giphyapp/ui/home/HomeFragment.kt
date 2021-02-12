@@ -7,19 +7,21 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.GridLayoutManager
+import com.artur.giphyapp.data.local.GifItem
 import com.artur.giphyapp.data.remote.Result.Status
 import com.artur.giphyapp.databinding.HomeFragmentBinding
 import com.artur.giphyapp.ui.home.adapter.HomeGifAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class HomeFragment : Fragment(), SearchView.OnQueryTextListener {
+class HomeFragment : Fragment(), SearchView.OnQueryTextListener,
+    HomeGifAdapter.OnItemClickListener {
 
     private var _binding: HomeFragmentBinding? = null
     private val binding get() = _binding!!
 
     private val viewModel: HomeViewModel by viewModel()
 
-    private val adapter = HomeGifAdapter()
+    private val adapter = HomeGifAdapter(this)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -88,7 +90,7 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener {
 
     private fun onTextSearched(text: String?) {
         if (!text.isNullOrEmpty())
-          /*  viewModel.search(text).observe(viewLifecycleOwner, {
+            viewModel.search(text).observe(viewLifecycleOwner, {
                 it?.let { resource ->
                     when (resource.status) {
                         Status.LOADING -> {
@@ -108,8 +110,12 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener {
                         }
                     }
                 }
-            })*/
+            })
         else
             getTrending()
+    }
+
+    override fun onItemClicked(gifItem: GifItem) {
+        viewModel.saveFavourite(gifItem)
     }
 }

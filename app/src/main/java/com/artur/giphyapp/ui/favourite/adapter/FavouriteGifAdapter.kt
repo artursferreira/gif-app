@@ -1,4 +1,4 @@
-package com.artur.giphyapp.ui.home.adapter
+package com.artur.giphyapp.ui.favourite.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -7,9 +7,11 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.artur.giphyapp.data.local.GifItem
 import com.artur.giphyapp.databinding.GifItemBinding
+import com.artur.giphyapp.databinding.GifItemFavouriteBinding
+import com.artur.giphyapp.ui.home.adapter.HomeGifAdapter
 import com.bumptech.glide.Glide
 
-class HomeGifAdapter(private val itemClickListener: OnItemClickListener) : ListAdapter<GifItem, HomeGifAdapter.GifViewHolder>(object :
+class FavouriteGifAdapter : ListAdapter<GifItem, FavouriteGifAdapter.GifViewHolder>(object :
     DiffUtil.ItemCallback<GifItem>() {
     override fun areItemsTheSame(oldItem: GifItem, newItem: GifItem): Boolean {
         return oldItem.id == newItem.id
@@ -21,28 +23,21 @@ class HomeGifAdapter(private val itemClickListener: OnItemClickListener) : ListA
 }) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GifViewHolder {
-        val itemBinding = GifItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val itemBinding = GifItemFavouriteBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return GifViewHolder(itemBinding)
     }
 
     override fun onBindViewHolder(holder: GifViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(item, itemClickListener)
+        holder.bind(item)
     }
 
-    class GifViewHolder(private val itemBinding: GifItemBinding) :
+    class GifViewHolder(private val itemBinding: GifItemFavouriteBinding) :
         RecyclerView.ViewHolder(itemBinding.root) {
-        fun bind(gifItem: GifItem, clickListener: OnItemClickListener) {
+        fun bind(gifItem: GifItem) {
             with(itemBinding) {
                 Glide.with(gif.context).load(gifItem.url).into(gif)
-                favouriteButton.isSelected = gifItem.isFavourite
-
-                itemView.setOnClickListener { clickListener.onItemClicked(gifItem.copy(isFavourite = !gifItem.isFavourite)) }
             }
         }
-    }
-
-    interface OnItemClickListener{
-        fun onItemClicked(gifItem: GifItem)
     }
 }

@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity() {
         binding.pager.adapter = FragmentAdapter(this)
         TabLayoutMediator(binding.tabLayout, binding.pager) { tab, position ->
             tab.text =
-                if (position == 0) getString(R.string.home_tab_title) else getString(R.string.favorites_tab_title)
+                if (position == 0) getString(R.string.home_tab_title) else getString(R.string.favourites_tab_title)
         }.attach()
 
     }

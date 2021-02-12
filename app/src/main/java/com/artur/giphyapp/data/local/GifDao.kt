@@ -13,13 +13,16 @@ interface GifDao {
     fun getAllTrending(): LiveData<List<GifItem>>
 
     @Query("SELECT * FROM gifitem WHERE isFavourite == 1")
-    fun getAllFavorites(): LiveData<List<GifItem>>
+    fun getAllFavourites(): LiveData<List<GifItem>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertAll(vararg gif: GifItem)
 
-    @Query("DELETE from gifitem WHERE isTrending == 1")
-    fun deleteAllTrending()
+    @Query("DELETE from gifitem WHERE isFavourite == 0 AND id NOT IN (:gifList) ")
+    fun deleteOldTrending(gifList: List<String>)
+
+    @Update
+    fun update(vararg gif: GifItem)
 
     @Delete
     fun delete(gif: GifItem)
