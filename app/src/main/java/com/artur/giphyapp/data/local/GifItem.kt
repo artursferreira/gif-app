@@ -4,9 +4,10 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class GifItemLocal(
+data class GifItem(
     @PrimaryKey val id: String,
     val title: String,
     val url: String,
-    var isFavorite: Boolean = false
+    var isTrending: Boolean = false,
+    var isFavourite: Boolean = false
 )

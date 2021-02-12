@@ -5,6 +5,7 @@ import com.artur.giphyapp.data.networkModule
 import com.artur.giphyapp.data.remote.giphy.giphyModule
 import com.artur.giphyapp.ui.favourite.favouriteModule
 import com.artur.giphyapp.ui.home.homeModule
+import com.artur.giphyapp.ui.mainModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
@@ -15,7 +16,7 @@ class GiphyApp : Application() {
 
         startKoin {
             androidContext(applicationContext)
-            modules(listOf(networkModule, giphyModule, homeModule, favouriteModule))
+            modules(listOf(networkModule, giphyModule, mainModule, homeModule, favouriteModule))
         }
     }
 }
