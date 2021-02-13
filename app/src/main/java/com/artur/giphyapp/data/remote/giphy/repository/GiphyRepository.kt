@@ -15,7 +15,7 @@ class GiphyRepository(
         databaseQuery = { dao.getAllTrending() },
         networkCall = { remoteSource.getTrending() },
         saveCallResult = {
-            dao.deleteOldTrending(it.data.map { it.id })
+            dao.updateOldTrending(it.data.map { it.id })
             dao.insertAll(*it.mapToGifItem().map { it.copy(isTrending = true) }.toTypedArray())
         }
     )

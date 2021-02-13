@@ -37,7 +37,7 @@ class HomeGifAdapter(private val itemClickListener: OnItemClickListener) : ListA
                 Glide.with(gif.context).load(gifItem.url).into(gif)
                 favouriteButton.isSelected = gifItem.isFavourite
 
-                itemView.setOnClickListener { clickListener.onItemClicked(gifItem.copy(isFavourite = !gifItem.isFavourite)) }
+                favouriteButton.setOnClickListener { clickListener.onItemClicked(gifItem.copy(isFavourite = !gifItem.isFavourite)) }
             }
         }
     }

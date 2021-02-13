@@ -18,8 +18,8 @@ interface GifDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertAll(vararg gif: GifItem)
 
-    @Query("DELETE from gifitem WHERE isFavourite == 0 AND id NOT IN (:gifList) ")
-    fun deleteOldTrending(gifList: List<String>)
+    @Query("UPDATE gifitem SET isTrending = 0 WHERE id NOT IN (:gifList) ")
+    fun updateOldTrending(gifList: List<String>)
 
     @Update
     fun update(vararg gif: GifItem)
