@@ -1,28 +1,25 @@
 package com.artur.giphyapp.ui.favourite
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
-import com.artur.giphyapp.R
-import com.artur.giphyapp.data.remote.Result
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.artur.giphyapp.data.local.GifItem
 import com.artur.giphyapp.databinding.FavouriteFragmentBinding
-import com.artur.giphyapp.databinding.HomeFragmentBinding
-import com.artur.giphyapp.ui.favourite.adapter.FavouriteGifAdapter
-import com.artur.giphyapp.ui.home.HomeViewModel
+import com.artur.giphyapp.ui.adapter.GifAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class FavouriteFragment : Fragment() {
+class FavouriteFragment : Fragment(), GifAdapter.OnItemClickListener {
 
     private var _binding: FavouriteFragmentBinding? = null
     private val binding get() = _binding!!
 
     private val viewModel: FavouriteViewModel by viewModel()
 
-    private val adapter = FavouriteGifAdapter()
+    private val adapter = GifAdapter(this)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -57,9 +54,14 @@ class FavouriteFragment : Fragment() {
 
     private fun setupRecyclerView() {
         with(binding) {
-            recyclerview.layoutManager = GridLayoutManager(requireContext(), 2)
+            recyclerview.layoutManager =
+                StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
             recyclerview.adapter = adapter
         }
+    }
+
+    override fun onItemClicked(gifItem: GifItem) {
+        viewModel.saveFavourite(gifItem)
     }
 
 }

@@ -2,8 +2,7 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_height="@dimen/gif_default_height"
+    android:layout_height="wrap_content"
     android:layout_margin="@dimen/gif_card_margin"
     app:cardCornerRadius="@dimen/card_corner_radius">
 
@@ -13,9 +12,9 @@
 
         <ImageView
             android:id="@+id/gif"
-            android:layout_width="match_parent"
-            android:scaleType="centerCrop"
-            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:adjustViewBounds="true"
+            android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
