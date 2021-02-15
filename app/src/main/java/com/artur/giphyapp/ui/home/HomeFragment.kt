@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.artur.giphyapp.R
 import com.artur.giphyapp.data.local.GifItem
 import com.artur.giphyapp.data.remote.Result.Status
 import com.artur.giphyapp.databinding.HomeFragmentBinding
@@ -49,7 +50,8 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener,
 
     private fun setupRecyclerView() {
         with(binding) {
-            recyclerview.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+            recyclerview.layoutManager =
+                StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
             recyclerview.adapter = adapter
         }
     }
@@ -62,16 +64,21 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener,
                         with(binding) {
                             progressCircular.visibility = View.VISIBLE
                             recyclerview.visibility = View.GONE
+                            emptyState.visibility = View.GONE
                         }
                     }
                     Status.SUCCESS -> {
                         with(binding) {
-                            progressCircular.visibility = View.GONE
-                            recyclerview.visibility = View.VISIBLE
+                            motionLayout.setTransition(R.id.loading_transition)
+                            motionLayout.transitionToEnd()
                             adapter.submitList(resource.data)
                         }
                     }
                     Status.ERROR -> {
+                        with(binding.motionLayout) {
+                            setTransition(R.id.error_transition)
+                            transitionToEnd()
+                        }
                     }
                 }
             }

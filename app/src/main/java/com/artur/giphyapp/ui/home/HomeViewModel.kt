@@ -15,6 +15,7 @@ class HomeViewModel(
 
     val trendingGifs = giphyRepository.trendingGifs
 
+    val favouriteGifs = giphyRepository.favouriteGifs
 
     fun search(query: String?) = liveData(Dispatchers.IO) {
         emit(Result.loading(data = null))
