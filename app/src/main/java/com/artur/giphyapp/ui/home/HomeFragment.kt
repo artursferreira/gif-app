@@ -41,6 +41,12 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener,
         binding.searchView.setOnQueryTextListener(this)
 
         getTrending()
+
+        viewModel.favouriteGifs.observe(viewLifecycleOwner, {
+            it?.let { list->
+                adapter.favourites = list.map { it.id }
+            }
+        })
     }
 
     override fun onDestroyView() {
@@ -104,16 +110,21 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener,
                             with(binding) {
                                 progressCircular.visibility = View.VISIBLE
                                 recyclerview.visibility = View.GONE
+                                emptyState.visibility = View.GONE
                             }
                         }
                         Status.SUCCESS -> {
                             with(binding) {
-                                progressCircular.visibility = View.GONE
-                                recyclerview.visibility = View.VISIBLE
+                                motionLayout.setTransition(R.id.loading_transition)
+                                motionLayout.transitionToEnd()
                                 adapter.submitList(resource.data)
                             }
                         }
                         Status.ERROR -> {
+                            with(binding.motionLayout) {
+                                setTransition(R.id.error_transition)
+                                transitionToEnd()
+                            }
                         }
                     }
                 }

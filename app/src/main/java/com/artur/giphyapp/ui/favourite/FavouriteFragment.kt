@@ -45,6 +45,7 @@ class FavouriteFragment : Fragment(), GifAdapter.OnItemClickListener {
                         motionLayout.transitionToStart()
                     } else {
                         motionLayout.transitionToEnd()
+                        adapter.favourites = list.map { it.id }
                         adapter.submitList(list)
                     }
                 }
