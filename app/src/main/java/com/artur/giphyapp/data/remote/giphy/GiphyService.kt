@@ -24,7 +24,7 @@ interface GiphyService {
     ): Response<GifResult>
 
     companion object {
-        const val DEFAULT_LIMIT = "25"
+        const val DEFAULT_LIMIT = "100"
         const val GENERAL = "g" //general audiences
     }
 

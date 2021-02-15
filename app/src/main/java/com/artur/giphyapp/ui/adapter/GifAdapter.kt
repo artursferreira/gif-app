@@ -2,6 +2,7 @@ package com.artur.giphyapp.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.AdapterView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -12,16 +13,25 @@ import com.artur.giphyapp.extensions.dp
 import com.artur.giphyapp.extensions.setLayoutHeight
 import com.bumptech.glide.Glide
 
-class GifAdapter(private val itemClickListener: OnItemClickListener) : ListAdapter<GifItem, GifAdapter.GifViewHolder>(object :
-    DiffUtil.ItemCallback<GifItem>() {
-    override fun areItemsTheSame(oldItem: GifItem, newItem: GifItem): Boolean {
-        return oldItem.id == newItem.id
-    }
+class GifAdapter(private val itemClickListener: OnItemClickListener) :
+    ListAdapter<GifItem, GifAdapter.GifViewHolder>(object :
+        DiffUtil.ItemCallback<GifItem>() {
+        override fun areItemsTheSame(oldItem: GifItem, newItem: GifItem): Boolean {
+            return oldItem.id == newItem.id
+        }
 
-    override fun areContentsTheSame(oldItem: GifItem, newItem: GifItem): Boolean {
-        return oldItem == newItem
-    }
-}) {
+        override fun areContentsTheSame(oldItem: GifItem, newItem: GifItem): Boolean {
+            return oldItem == newItem
+        }
+    }) {
+
+    var favourites: List<String> = emptyList()
+        set(value) {
+            if (field == value)
+                return
+            field = value
+            notifyDataSetChanged()
+        }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GifViewHolder {
         val itemBinding = GifItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -30,6 +40,7 @@ class GifAdapter(private val itemClickListener: OnItemClickListener) : ListAdapt
 
     override fun onBindViewHolder(holder: GifViewHolder, position: Int) {
         val item = getItem(position)
+        item.isFavourite = favourites.contains(item.id)
         holder.bind(item, itemClickListener)
     }
 
@@ -38,15 +49,22 @@ class GifAdapter(private val itemClickListener: OnItemClickListener) : ListAdapt
         fun bind(gifItem: GifItem, clickListener: OnItemClickListener) {
             with(itemBinding) {
                 gif.setLayoutHeight(gifItem.width.dp, gifItem.height.dp)
-                Glide.with(gif.context).load(gifItem.url).placeholder(R.drawable.progress_anim).into(gif)
+                Glide.with(gif.context).load(gifItem.url).placeholder(R.drawable.progress_anim)
+                    .into(gif)
                 favouriteButton.isSelected = gifItem.isFavourite
 
-                favouriteButton.setOnClickListener { clickListener.onItemClicked(gifItem.copy(isFavourite = !gifItem.isFavourite)) }
+                favouriteButton.setOnClickListener {
+                    clickListener.onItemClicked(
+                        gifItem.copy(
+                            isFavourite = !gifItem.isFavourite
+                        )
+                    )
+                }
             }
         }
     }
 
-    interface OnItemClickListener{
+    interface OnItemClickListener {
         fun onItemClicked(gifItem: GifItem)
     }
 }
