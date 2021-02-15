@@ -1,6 +1,11 @@
-package com.artur.giphyapp.data
+package com.artur.giphyapp.ui
 
+
+import androidx.room.Room
 import com.artur.giphyapp.BuildConfig
+import com.artur.giphyapp.data.local.AppDatabase
+import com.artur.giphyapp.data.remote.giphy.datasource.GiphyRemoteDataSource
+import com.artur.giphyapp.data.remote.giphy.repository.GiphyRepository
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.dsl.module
@@ -40,3 +45,21 @@ fun providesHttplogging(): HttpLoggingInterceptor {
 }
 
 inline fun <reified T> createWebService(retrofit: Retrofit): T = retrofit.create(T::class.java)
+
+
+val dbModule = module {
+    single {
+        Room.databaseBuilder(
+            get(),
+            AppDatabase::class.java,
+            "techstore-database"
+        )
+            .build()
+    }
+    single { get<AppDatabase>().gifDao() }
+}
+
+val mainModule = module {
+
+
+}

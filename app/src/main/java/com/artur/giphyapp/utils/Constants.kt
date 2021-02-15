@@ -1,4 +1,4 @@
-package com.artur.giphyapp.config
+package com.artur.giphyapp.utils
 
 class Constants {
     companion object {
