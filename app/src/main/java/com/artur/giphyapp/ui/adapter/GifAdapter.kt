@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.artur.giphyapp.R
 import com.artur.giphyapp.data.local.GifItem
 import com.artur.giphyapp.databinding.GifItemBinding
 import com.artur.giphyapp.extensions.dp
@@ -37,7 +38,7 @@ class GifAdapter(private val itemClickListener: OnItemClickListener) : ListAdapt
         fun bind(gifItem: GifItem, clickListener: OnItemClickListener) {
             with(itemBinding) {
                 gif.setLayoutHeight(gifItem.width.dp, gifItem.height.dp)
-                Glide.with(gif.context).load(gifItem.url).into(gif)
+                Glide.with(gif.context).load(gifItem.url).placeholder(R.drawable.progress_anim).into(gif)
                 favouriteButton.isSelected = gifItem.isFavourite
 
                 favouriteButton.setOnClickListener { clickListener.onItemClicked(gifItem.copy(isFavourite = !gifItem.isFavourite)) }

@@ -21,7 +21,6 @@ class GiphyRepository(
     val trendingGifs: LiveData<Result<List<GifItem>>> = liveData(Dispatchers.IO) {
         emit(Result.loading<List<GifItem>>())
         val trending = remoteSource.getTrending()
-        val favourites = dao.getAllFavourites()
 
         if (trending.status == Result.Status.SUCCESS) {
             emit(Result.success(trending.data?.mapToGifItem() ?: listOf()))

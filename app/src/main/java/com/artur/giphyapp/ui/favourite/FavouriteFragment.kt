@@ -40,8 +40,13 @@ class FavouriteFragment : Fragment(), GifAdapter.OnItemClickListener {
             it?.let { list ->
                 with(binding) {
                     progressCircular.visibility = View.GONE
-                    recyclerview.visibility = View.VISIBLE
-                    adapter.submitList(list)
+
+                    if(list.isNullOrEmpty()) {
+                        motionLayout.transitionToStart()
+                    } else {
+                        motionLayout.transitionToEnd()
+                        adapter.submitList(list)
+                    }
                 }
             }
         })
