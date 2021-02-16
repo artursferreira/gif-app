@@ -1,5 +1,6 @@
-package com.artur.giphyapp.ui.home
+package com.artur.giphyapp.di
 
+import com.artur.giphyapp.ui.home.HomeViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 

@@ -1,11 +1,9 @@
-package com.artur.giphyapp.ui
+package com.artur.giphyapp.di
 
 
 import androidx.room.Room
 import com.artur.giphyapp.BuildConfig
 import com.artur.giphyapp.data.local.AppDatabase
-import com.artur.giphyapp.data.remote.giphy.datasource.GiphyRemoteDataSource
-import com.artur.giphyapp.data.remote.giphy.repository.GiphyRepository
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.dsl.module
