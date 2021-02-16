@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">Giphy App</string>
+    <string name="home_tab_title">Home</string>
+    <string name="favourites_tab_title">Favourites</string>
+
+    //Home
+    <string name="search_hint">Type something to search for GIFs</string>
+    <string name="no_network_title">No internet connection</string>
+    <string name="no_network">Please check your internet connection and try again</string>
+
+    //Favourites
+    <string name="no_favourites_text">You haven\'t added any favourites yet</string>
 </resources>
