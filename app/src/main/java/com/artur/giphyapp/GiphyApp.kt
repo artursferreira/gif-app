@@ -1,12 +1,12 @@
 package com.artur.giphyapp
 
 import android.app.Application
-import com.artur.giphyapp.data.remote.giphy.giphyModule
-import com.artur.giphyapp.ui.dbModule
-import com.artur.giphyapp.ui.favourite.favouriteModule
-import com.artur.giphyapp.ui.home.homeModule
-import com.artur.giphyapp.ui.mainModule
-import com.artur.giphyapp.ui.networkModule
+import com.artur.giphyapp.di.giphyModule
+import com.artur.giphyapp.di.dbModule
+import com.artur.giphyapp.di.favouriteModule
+import com.artur.giphyapp.di.homeModule
+import com.artur.giphyapp.di.mainModule
+import com.artur.giphyapp.di.networkModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
