@@ -1,4 +1,4 @@
-package com.artur.giphyapp.ui.favourite
+package com.artur.giphyapp.favourite
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

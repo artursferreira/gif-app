@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layoutDescription="@xml/favourite_fragment_scene"
-    tools:context=".ui.favourite.FavouriteFragment">
+    tools:context=".favourite.FavouriteFragment">
 
     <com.google.android.material.progressindicator.CircularProgressIndicator
         android:id="@+id/progress_circular"

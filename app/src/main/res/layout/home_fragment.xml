@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layoutDescription="@xml/home_fragment_scene"
-    tools:context=".ui.home.HomeFragment">
+    tools:context=".home.HomeFragment">
 
     <androidx.appcompat.widget.SearchView
         android:id="@+id/search_view"

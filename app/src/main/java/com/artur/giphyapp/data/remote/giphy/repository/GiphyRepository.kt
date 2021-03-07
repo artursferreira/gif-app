@@ -1,39 +1,32 @@
 package com.artur.giphyapp.data.remote.giphy.repository
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.liveData
-import androidx.lifecycle.map
 import com.artur.giphyapp.data.local.GifDao
 import com.artur.giphyapp.data.local.GifItem
 import com.artur.giphyapp.data.remote.Result
 import com.artur.giphyapp.data.remote.giphy.datasource.GiphyRemoteDataSource
-import com.artur.giphyapp.data.remote.model.GifResult
+import com.artur.giphyapp.data.remote.succeeded
 import com.artur.giphyapp.extensions.mapToGifItem
-import com.artur.giphyapp.extensions.resultLiveData
-import kotlinx.coroutines.Dispatchers
-import retrofit2.Response
 
 class GiphyRepository(
     private val dao: GifDao,
     private val remoteSource: GiphyRemoteDataSource
 ) {
 
-    val trendingGifs: LiveData<Result<List<GifItem>>> = liveData(Dispatchers.IO) {
-        emit(Result.loading<List<GifItem>>())
-        val trending = remoteSource.getTrending()
-
-        if (trending.status == Result.Status.SUCCESS) {
-            emit(Result.success(trending.data?.mapToGifItem() ?: listOf()))
-        } else if (trending.status == Result.Status.ERROR) {
-            emit(Result.error(trending.message!!))
-        }
-
-    }
-
     val favouriteGifs = dao.getAllFavourites()
 
-    suspend fun search(query: String?): List<GifItem>? {
-        return remoteSource.search(query).data?.mapToGifItem()
+    suspend fun getTrendingGifs(): Result<List<GifItem>> {
+        val trending = remoteSource.getTrending()
+        return if (trending.succeeded) {
+            Result.Success((trending as Result.Success).data.mapToGifItem())
+        } else Result.Error((trending as Result.Error).exception)
+    }
+
+    suspend fun search(query: String?): Result<List<GifItem>> {
+        val searchResult = remoteSource.search(query)
+        return if (searchResult.succeeded) {
+            Result.Success((searchResult as Result.Success).data.mapToGifItem())
+        } else Result.Error((searchResult as Result.Error).exception)
+
     }
 
     suspend fun saveFavourite(gifItem: GifItem) {

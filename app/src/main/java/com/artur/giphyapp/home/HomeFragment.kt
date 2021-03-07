@@ -1,17 +1,16 @@
-package com.artur.giphyapp.ui.home
+package com.artur.giphyapp.home
 
 import android.os.Bundle
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.artur.giphyapp.R
 import com.artur.giphyapp.data.local.GifItem
-import com.artur.giphyapp.data.remote.Result.Status
+import com.artur.giphyapp.data.remote.Result
 import com.artur.giphyapp.databinding.HomeFragmentBinding
-import com.artur.giphyapp.ui.adapter.GifAdapter
+import com.artur.giphyapp.home.adapter.GifAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomeFragment : Fragment(), SearchView.OnQueryTextListener,
@@ -30,6 +29,7 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener,
     ): View {
 
         _binding = HomeFragmentBinding.inflate(inflater, container, false)
+        setHasOptionsMenu(true)
 
         return binding.root
     }
@@ -39,14 +39,29 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener,
 
         setupRecyclerView()
         binding.searchView.setOnQueryTextListener(this)
+        observeGifs()
+        observeFavorites()
+    }
 
-        getTrending()
+    override fun onCreateOptionsMenu(menu: Menu, menuInflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, menuInflater)
 
-        viewModel.favouriteGifs.observe(viewLifecycleOwner, {
-            it?.let { list->
-                adapter.favourites = list.map { it.id }
+        menuInflater.inflate(R.menu.main_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.favourites -> {
+                findNavController().navigate(R.id.favouriteFragment)
+                return true
             }
-        })
+            R.id.settings -> {
+                findNavController().navigate(R.id.settingsFragment)
+                return true
+            }
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onDestroyView() {
@@ -62,25 +77,25 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener,
         }
     }
 
-    private fun getTrending() {
-        viewModel.trendingGifs.observe(viewLifecycleOwner, {
+    private fun observeGifs() {
+        viewModel.gifs.observe(viewLifecycleOwner, {
             it?.let { resource ->
-                when (resource.status) {
-                    Status.LOADING -> {
+                when (resource) {
+                    is Result.Loading -> {
                         with(binding) {
                             progressCircular.visibility = View.VISIBLE
                             recyclerview.visibility = View.GONE
                             emptyState.visibility = View.GONE
                         }
                     }
-                    Status.SUCCESS -> {
+                    is Result.Success -> {
                         with(binding) {
                             motionLayout.setTransition(R.id.loading_transition)
                             motionLayout.transitionToEnd()
                             adapter.submitList(resource.data)
                         }
                     }
-                    Status.ERROR -> {
+                    is Result.Error -> {
                         with(binding.motionLayout) {
                             setTransition(R.id.error_transition)
                             transitionToEnd()
@@ -89,6 +104,19 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener,
                 }
             }
         })
+    }
+
+    private fun observeFavorites() {
+        viewModel.favouriteGifs.observe(viewLifecycleOwner, {
+            it?.let { list ->
+                adapter.favourites = list.map { it.id }
+            }
+        })
+
+    }
+
+    private fun getTrending() {
+       viewModel.getTrendingGifs()
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
@@ -103,32 +131,7 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener,
 
     private fun onTextSearched(text: String?) {
         if (!text.isNullOrEmpty())
-            viewModel.search(text).observe(viewLifecycleOwner, {
-                it?.let { resource ->
-                    when (resource.status) {
-                        Status.LOADING -> {
-                            with(binding) {
-                                progressCircular.visibility = View.VISIBLE
-                                recyclerview.visibility = View.GONE
-                                emptyState.visibility = View.GONE
-                            }
-                        }
-                        Status.SUCCESS -> {
-                            with(binding) {
-                                motionLayout.setTransition(R.id.loading_transition)
-                                motionLayout.transitionToEnd()
-                                adapter.submitList(resource.data)
-                            }
-                        }
-                        Status.ERROR -> {
-                            with(binding.motionLayout) {
-                                setTransition(R.id.error_transition)
-                                transitionToEnd()
-                            }
-                        }
-                    }
-                }
-            })
+            viewModel.search(text)
         else
             getTrending()
     }

@@ -8,25 +8,23 @@ package com.artur.giphyapp.data.remote
  * `LiveData<Result<T>>` to pass back the latest data to the UI with its fetch status.
  */
 
-data class Result<out T>(val status: Status, val data: T?, val message: String?) {
+sealed class Result<out R> {
 
-    enum class Status {
-        SUCCESS,
-        ERROR,
-        LOADING
-    }
+    data class Success<out T>(val data: T) : Result<T>()
+    data class Error(val exception: Exception) : Result<Nothing>()
+    object Loading : Result<Nothing>()
 
-    companion object {
-        fun <T> success(data: T): Result<T> {
-            return Result(Status.SUCCESS, data, null)
-        }
-
-        fun <T> error(message: String, data: T? = null): Result<T> {
-            return Result(Status.ERROR, data, message)
-        }
-
-        fun <T> loading(data: T? = null): Result<T> {
-            return Result(Status.LOADING, data, null)
+    override fun toString(): String {
+        return when (this) {
+            is Success<*> -> "Success[data=$data]"
+            is Error -> "Error[exception=$exception]"
+            Loading -> "Loading"
         }
     }
 }
+
+/**
+ * `true` if [Result] is of type [Success] & holds non-null [Success.data].
+ */
+val Result<*>.succeeded
+    get() = this is Result.Success && data != null

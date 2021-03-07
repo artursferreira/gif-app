@@ -13,8 +13,8 @@
         <ImageView
             android:id="@+id/gif"
             android:layout_width="0dp"
-            android:adjustViewBounds="true"
             android:layout_height="0dp"
+            android:adjustViewBounds="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -22,12 +22,13 @@
 
         <ImageView
             android:id="@+id/favourite_button"
-            app:srcCompat="@drawable/ic_favourite_selector"
             android:layout_width="@dimen/favourite_button_size"
             android:layout_height="@dimen/favourite_button_size"
             android:layout_margin="@dimen/favourite_button_margin"
+            android:hapticFeedbackEnabled="true"
             app:layout_constraintBottom_toBottomOf="@+id/gif"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@drawable/ic_favourite_selector" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

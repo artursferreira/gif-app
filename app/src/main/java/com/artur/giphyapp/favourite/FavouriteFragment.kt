@@ -1,15 +1,15 @@
-package com.artur.giphyapp.ui.favourite
+package com.artur.giphyapp.favourite
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.artur.giphyapp.data.local.GifItem
 import com.artur.giphyapp.databinding.FavouriteFragmentBinding
-import com.artur.giphyapp.ui.adapter.GifAdapter
+import com.artur.giphyapp.extensions.setDisplayHomeAsUpEnabled
+import com.artur.giphyapp.home.adapter.GifAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FavouriteFragment : Fragment(), GifAdapter.OnItemClickListener {
@@ -35,7 +35,24 @@ class FavouriteFragment : Fragment(), GifAdapter.OnItemClickListener {
         super.onViewCreated(view, savedInstanceState)
 
         setupRecyclerView()
+        observeFavorites()
 
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    private fun setupRecyclerView() {
+        with(binding) {
+            recyclerview.layoutManager =
+                StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+            recyclerview.adapter = adapter
+        }
+    }
+
+    private fun observeFavorites() {
         viewModel.favouriteGifs.observe(viewLifecycleOwner, {
             it?.let { list ->
                 with(binding) {
@@ -51,19 +68,6 @@ class FavouriteFragment : Fragment(), GifAdapter.OnItemClickListener {
                 }
             }
         })
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
-    private fun setupRecyclerView() {
-        with(binding) {
-            recyclerview.layoutManager =
-                StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
-            recyclerview.adapter = adapter
-        }
     }
 
     override fun onItemClicked(gifItem: GifItem) {
