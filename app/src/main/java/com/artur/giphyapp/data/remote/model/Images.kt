@@ -1,6 +1,8 @@
 package com.artur.giphyapp.data.remote.model
 
+import com.google.gson.annotations.SerializedName
+
 
 data class Images(
-    val downsized: Downsized
+   @SerializedName("downsized_medium") val downsized: Downsized
 )
