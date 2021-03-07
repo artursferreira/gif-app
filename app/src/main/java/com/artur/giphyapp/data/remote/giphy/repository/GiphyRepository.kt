@@ -12,17 +12,14 @@ class GiphyRepository(
     private val remoteSource: GiphyRemoteDataSource
 ) {
 
+    val favouriteGifs = dao.getAllFavourites()
+
     suspend fun getTrendingGifs(): Result<List<GifItem>> {
         val trending = remoteSource.getTrending()
         return if (trending.succeeded) {
             Result.Success((trending as Result.Success).data.mapToGifItem())
         } else Result.Error((trending as Result.Error).exception)
     }
-
-    suspend fun getFavourites(): List<GifItem> {
-        return dao.getAllFavourites()
-    }
- //   val favouriteGifs = dao.getAllFavourites()
 
     suspend fun search(query: String?): Result<List<GifItem>> {
         val searchResult = remoteSource.search(query)

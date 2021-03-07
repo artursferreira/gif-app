@@ -10,7 +10,7 @@ interface GifDao {
     fun getAll(): LiveData<List<GifItem>>
 
     @Query("SELECT * FROM Favourites WHERE isFavourite == 1")
-    fun getAllFavourites(): List<GifItem>
+    fun getAllFavourites(): LiveData<List<GifItem>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(vararg gif: GifItem)

@@ -16,6 +16,8 @@ class HomeViewModel(
     val gifs: LiveData<Result<List<GifItem>>>
         get() = _gifs
 
+    val favouriteGifs = giphyRepository.favouriteGifs
+
     init {
         getTrendingGifs()
     }
@@ -23,13 +25,13 @@ class HomeViewModel(
     fun getTrendingGifs() {
         viewModelScope.launch {
             val trendingGifs = withContext(Dispatchers.IO) { giphyRepository.getTrendingGifs() }
-            val favouriteGifs: List<String> =
-                withContext(Dispatchers.IO) { giphyRepository.getFavourites().map { it.id } }
-            if (trendingGifs is Result.Success) {
-                trendingGifs.data.forEach { gifItem ->
-                    gifItem.isFavourite = favouriteGifs.contains(gifItem.id)
-                }
-            }
+            /* val favouriteGifs: List<String> =
+                 withContext(Dispatchers.IO) { giphyRepository.getFavourites().map { it.id } }
+             if (trendingGifs is Result.Success) {
+                 trendingGifs.data.forEach { gifItem ->
+                     gifItem.isFavourite = favouriteGifs.contains(gifItem.id)
+                 }
+             }*/
             _gifs.postValue(trendingGifs)
         }
     }

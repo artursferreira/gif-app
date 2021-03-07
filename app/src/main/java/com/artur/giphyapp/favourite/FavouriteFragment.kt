@@ -35,22 +35,8 @@ class FavouriteFragment : Fragment(), GifAdapter.OnItemClickListener {
         super.onViewCreated(view, savedInstanceState)
 
         setupRecyclerView()
+        observeFavorites()
 
-      /*  viewModel.favouriteGifs.observe(viewLifecycleOwner, {
-            it?.let { list ->
-                with(binding) {
-                    progressCircular.visibility = View.GONE
-
-                    if(list.isNullOrEmpty()) {
-                        motionLayout.transitionToStart()
-                    } else {
-                        motionLayout.transitionToEnd()
-                        adapter.favourites = list.map { it.id }
-                        adapter.submitList(list)
-                    }
-                }
-            }
-        })*/
     }
 
     override fun onDestroyView() {
@@ -64,6 +50,24 @@ class FavouriteFragment : Fragment(), GifAdapter.OnItemClickListener {
                 StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
             recyclerview.adapter = adapter
         }
+    }
+
+    private fun observeFavorites() {
+        viewModel.favouriteGifs.observe(viewLifecycleOwner, {
+            it?.let { list ->
+                with(binding) {
+                    progressCircular.visibility = View.GONE
+
+                    if(list.isNullOrEmpty()) {
+                        motionLayout.transitionToStart()
+                    } else {
+                        motionLayout.transitionToEnd()
+                        adapter.favourites = list.map { it.id }
+                        adapter.submitList(list)
+                    }
+                }
+            }
+        })
     }
 
     override fun onItemClicked(gifItem: GifItem) {

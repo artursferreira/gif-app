@@ -39,39 +39,8 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener,
 
         setupRecyclerView()
         binding.searchView.setOnQueryTextListener(this)
-
-      /*  viewModel.favouriteGifs.observe(viewLifecycleOwner, {
-            it?.let { list ->
-                adapter.favourites = list.map { it.id }
-            }
-        })*/
-
-        viewModel.gifs.observe(viewLifecycleOwner, {
-            it?.let { resource ->
-                when (resource) {
-                    is Result.Loading -> {
-                        with(binding) {
-                            progressCircular.visibility = View.VISIBLE
-                            recyclerview.visibility = View.GONE
-                            emptyState.visibility = View.GONE
-                        }
-                    }
-                    is Result.Success -> {
-                        with(binding) {
-                            motionLayout.setTransition(R.id.loading_transition)
-                            motionLayout.transitionToEnd()
-                            adapter.submitList(resource.data)
-                        }
-                    }
-                    is Result.Error -> {
-                        with(binding.motionLayout) {
-                            setTransition(R.id.error_transition)
-                            transitionToEnd()
-                        }
-                    }
-                }
-            }
-        })
+        observeGifs()
+        observeFavorites()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, menuInflater: MenuInflater) {
@@ -106,6 +75,44 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener,
                 StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
             recyclerview.adapter = adapter
         }
+    }
+
+    private fun observeGifs() {
+        viewModel.gifs.observe(viewLifecycleOwner, {
+            it?.let { resource ->
+                when (resource) {
+                    is Result.Loading -> {
+                        with(binding) {
+                            progressCircular.visibility = View.VISIBLE
+                            recyclerview.visibility = View.GONE
+                            emptyState.visibility = View.GONE
+                        }
+                    }
+                    is Result.Success -> {
+                        with(binding) {
+                            motionLayout.setTransition(R.id.loading_transition)
+                            motionLayout.transitionToEnd()
+                            adapter.submitList(resource.data)
+                        }
+                    }
+                    is Result.Error -> {
+                        with(binding.motionLayout) {
+                            setTransition(R.id.error_transition)
+                            transitionToEnd()
+                        }
+                    }
+                }
+            }
+        })
+    }
+
+    private fun observeFavorites() {
+        viewModel.favouriteGifs.observe(viewLifecycleOwner, {
+            it?.let { list ->
+                adapter.favourites = list.map { it.id }
+            }
+        })
+
     }
 
     private fun getTrending() {

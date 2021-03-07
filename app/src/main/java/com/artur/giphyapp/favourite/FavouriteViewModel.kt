@@ -12,7 +12,7 @@ class FavouriteViewModel(
     private val giphyRepository: GiphyRepository
 ) : ViewModel() {
 
-   // val favouriteGifs = giphyRepository.favouriteGifs
+    val favouriteGifs = giphyRepository.favouriteGifs
 
     fun saveFavourite(gifItem: GifItem) {
         viewModelScope.launch {

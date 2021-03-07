@@ -1,6 +1,8 @@
 package com.artur.giphyapp.extensions
 
 import android.content.res.Resources
+import android.view.HapticFeedbackConstants
+import android.view.MotionEvent
 import android.view.View
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
@@ -38,5 +40,16 @@ fun Fragment.setDisplayHomeAsUpEnabled(bool: Boolean) {
         (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(
             bool
         )
+    }
+}
+
+fun View.performHapticFeedback() {
+    this.setOnTouchListener { v, event ->
+        if (event.action == MotionEvent.ACTION_DOWN)
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                this.performHapticFeedback(HapticFeedbackConstants.CONTEXT_CLICK)
+            }
+        v.performClick()
+        v.onTouchEvent(event)
     }
 }
