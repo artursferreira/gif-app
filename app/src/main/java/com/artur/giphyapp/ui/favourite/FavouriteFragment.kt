@@ -36,7 +36,7 @@ class FavouriteFragment : Fragment(), GifAdapter.OnItemClickListener {
 
         setupRecyclerView()
 
-        viewModel.favouriteGifs.observe(viewLifecycleOwner, {
+      /*  viewModel.favouriteGifs.observe(viewLifecycleOwner, {
             it?.let { list ->
                 with(binding) {
                     progressCircular.visibility = View.GONE
@@ -50,7 +50,7 @@ class FavouriteFragment : Fragment(), GifAdapter.OnItemClickListener {
                     }
                 }
             }
-        })
+        })*/
     }
 
     override fun onDestroyView() {

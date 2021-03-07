@@ -25,14 +25,6 @@ class GifAdapter(private val itemClickListener: OnItemClickListener) :
         }
     }) {
 
-    var favourites: List<String> = emptyList()
-        set(value) {
-            if (field == value)
-                return
-            field = value
-            notifyDataSetChanged()
-        }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GifViewHolder {
         val itemBinding = GifItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return GifViewHolder(itemBinding)
@@ -40,7 +32,6 @@ class GifAdapter(private val itemClickListener: OnItemClickListener) :
 
     override fun onBindViewHolder(holder: GifViewHolder, position: Int) {
         val item = getItem(position)
-        item.isFavourite = favourites.contains(item.id)
         holder.bind(item, itemClickListener)
     }
 

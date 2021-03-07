@@ -9,7 +9,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.artur.giphyapp.R
 import com.artur.giphyapp.data.local.GifItem
-import com.artur.giphyapp.data.remote.Result.Status
+import com.artur.giphyapp.data.remote.Result
 import com.artur.giphyapp.databinding.HomeFragmentBinding
 import com.artur.giphyapp.ui.adapter.GifAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -40,11 +40,36 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener,
         setupRecyclerView()
         binding.searchView.setOnQueryTextListener(this)
 
-        getTrending()
-
-        viewModel.favouriteGifs.observe(viewLifecycleOwner, {
-            it?.let { list->
+      /*  viewModel.favouriteGifs.observe(viewLifecycleOwner, {
+            it?.let { list ->
                 adapter.favourites = list.map { it.id }
+            }
+        })*/
+
+        viewModel.gifs.observe(viewLifecycleOwner, {
+            it?.let { resource ->
+                when (resource) {
+                    is Result.Loading -> {
+                        with(binding) {
+                            progressCircular.visibility = View.VISIBLE
+                            recyclerview.visibility = View.GONE
+                            emptyState.visibility = View.GONE
+                        }
+                    }
+                    is Result.Success -> {
+                        with(binding) {
+                            motionLayout.setTransition(R.id.loading_transition)
+                            motionLayout.transitionToEnd()
+                            adapter.submitList(resource.data)
+                        }
+                    }
+                    is Result.Error -> {
+                        with(binding.motionLayout) {
+                            setTransition(R.id.error_transition)
+                            transitionToEnd()
+                        }
+                    }
+                }
             }
         })
     }
@@ -63,32 +88,7 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener,
     }
 
     private fun getTrending() {
-        viewModel.trendingGifs.observe(viewLifecycleOwner, {
-            it?.let { resource ->
-                when (resource.status) {
-                    Status.LOADING -> {
-                        with(binding) {
-                            progressCircular.visibility = View.VISIBLE
-                            recyclerview.visibility = View.GONE
-                            emptyState.visibility = View.GONE
-                        }
-                    }
-                    Status.SUCCESS -> {
-                        with(binding) {
-                            motionLayout.setTransition(R.id.loading_transition)
-                            motionLayout.transitionToEnd()
-                            adapter.submitList(resource.data)
-                        }
-                    }
-                    Status.ERROR -> {
-                        with(binding.motionLayout) {
-                            setTransition(R.id.error_transition)
-                            transitionToEnd()
-                        }
-                    }
-                }
-            }
-        })
+       viewModel.getTrendingGifs()
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
@@ -103,32 +103,7 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener,
 
     private fun onTextSearched(text: String?) {
         if (!text.isNullOrEmpty())
-            viewModel.search(text).observe(viewLifecycleOwner, {
-                it?.let { resource ->
-                    when (resource.status) {
-                        Status.LOADING -> {
-                            with(binding) {
-                                progressCircular.visibility = View.VISIBLE
-                                recyclerview.visibility = View.GONE
-                                emptyState.visibility = View.GONE
-                            }
-                        }
-                        Status.SUCCESS -> {
-                            with(binding) {
-                                motionLayout.setTransition(R.id.loading_transition)
-                                motionLayout.transitionToEnd()
-                                adapter.submitList(resource.data)
-                            }
-                        }
-                        Status.ERROR -> {
-                            with(binding.motionLayout) {
-                                setTransition(R.id.error_transition)
-                                transitionToEnd()
-                            }
-                        }
-                    }
-                }
-            })
+            viewModel.search(text)
         else
             getTrending()
     }
