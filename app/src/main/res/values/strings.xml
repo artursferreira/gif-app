@@ -11,4 +11,6 @@
 
     //Favourites
     <string name="no_favourites_text">You haven\'t added any favourites yet</string>
+    <string name="download_gif">Download GIF</string>
+    <string name="share_gif">Share GIF</string>
 </resources>

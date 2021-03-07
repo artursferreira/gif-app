@@ -1,8 +1,11 @@
 package com.artur.giphyapp.data.local
 
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 @Entity(tableName = "Favourites")
 data class GifItem(
     @PrimaryKey val id: String,
@@ -11,4 +14,4 @@ data class GifItem(
     val width: Int,
     val height: Int,
     var isFavourite: Boolean = false
-)
+) : Parcelable

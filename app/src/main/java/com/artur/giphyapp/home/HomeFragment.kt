@@ -1,9 +1,20 @@
 package com.artur.giphyapp.home
 
+import android.app.DownloadManager
+import android.app.NotificationManager
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.database.Cursor
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.view.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.appcompat.widget.SearchView
+import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.artur.giphyapp.R
@@ -11,6 +22,11 @@ import com.artur.giphyapp.data.local.GifItem
 import com.artur.giphyapp.data.remote.Result
 import com.artur.giphyapp.databinding.HomeFragmentBinding
 import com.artur.giphyapp.home.adapter.GifAdapter
+import com.artur.giphyapp.home.adapter.MenuFragment
+import com.artur.giphyapp.home.adapter.MenuFragment.Companion.KEY_GIF
+import com.artur.giphyapp.main.MainActivity
+import com.google.android.material.navigation.NavigationView
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomeFragment : Fragment(), SearchView.OnQueryTextListener,
@@ -23,12 +39,14 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener,
 
     private val adapter = GifAdapter(this)
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
 
         _binding = HomeFragmentBinding.inflate(inflater, container, false)
+
         setHasOptionsMenu(true)
 
         return binding.root
@@ -116,7 +134,7 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener,
     }
 
     private fun getTrending() {
-       viewModel.getTrendingGifs()
+        viewModel.getTrendingGifs()
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
@@ -136,7 +154,14 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener,
             getTrending()
     }
 
-    override fun onItemClicked(gifItem: GifItem) {
-        viewModel.saveFavourite(gifItem)
+    override fun onItemClicked(gifItem: GifItem, share: Boolean) {
+        if (!share)
+            viewModel.saveFavourite(gifItem)
+        else {
+            val menuFragment = MenuFragment()
+            val args = Bundle().apply { putParcelable(KEY_GIF, gifItem) }
+            menuFragment.arguments = args
+            menuFragment.show(childFragmentManager, "tag")
+        }
     }
 }

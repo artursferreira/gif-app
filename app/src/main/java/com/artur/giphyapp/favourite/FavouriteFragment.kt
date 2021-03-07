@@ -59,9 +59,11 @@ class FavouriteFragment : Fragment(), GifAdapter.OnItemClickListener {
                     progressCircular.visibility = View.GONE
 
                     if(list.isNullOrEmpty()) {
-                        motionLayout.transitionToStart()
+                       emptyState.visibility = View.VISIBLE
+                        recyclerview.visibility = View.GONE
                     } else {
-                        motionLayout.transitionToEnd()
+                        emptyState.visibility = View.GONE
+                        recyclerview.visibility = View.VISIBLE
                         adapter.favourites = list.map { it.id }
                         adapter.submitList(list)
                     }
@@ -70,7 +72,7 @@ class FavouriteFragment : Fragment(), GifAdapter.OnItemClickListener {
         })
     }
 
-    override fun onItemClicked(gifItem: GifItem) {
+    override fun onItemClicked(gifItem: GifItem, share: Boolean) {
         viewModel.saveFavourite(gifItem)
     }
 

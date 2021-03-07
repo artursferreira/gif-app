@@ -67,11 +67,15 @@ class GifAdapter(private val itemClickListener: OnItemClickListener) :
                         )
                     )
                 }
+
+                shareButton.setOnClickListener {
+                    clickListener.onItemClicked(gifItem, true)
+                }
             }
         }
     }
 
     interface OnItemClickListener {
-        fun onItemClicked(gifItem: GifItem)
+        fun onItemClicked(gifItem: GifItem, share: Boolean = false)
     }
 }
