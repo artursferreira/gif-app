@@ -5,8 +5,7 @@
     <Transition
         android:id="@+id/loading_transition"
         app:constraintSetEnd="@+id/end"
-        app:constraintSetStart="@id/start"
-        app:duration="2000">
+        app:constraintSetStart="@id/start">
         <KeyFrameSet>
             <KeyAttribute
                 android:alpha="1.0"

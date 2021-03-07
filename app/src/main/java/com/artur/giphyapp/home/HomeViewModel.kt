@@ -25,21 +25,18 @@ class HomeViewModel(
     fun getTrendingGifs() {
         viewModelScope.launch {
             val trendingGifs = withContext(Dispatchers.IO) { giphyRepository.getTrendingGifs() }
-            /* val favouriteGifs: List<String> =
-                 withContext(Dispatchers.IO) { giphyRepository.getFavourites().map { it.id } }
-             if (trendingGifs is Result.Success) {
-                 trendingGifs.data.forEach { gifItem ->
-                     gifItem.isFavourite = favouriteGifs.contains(gifItem.id)
-                 }
-             }*/
-            _gifs.postValue(trendingGifs)
+            withContext(Dispatchers.Main) {
+                _gifs.postValue(trendingGifs)
+            }
         }
     }
 
     fun search(query: String?) {
         viewModelScope.launch {
             val result = giphyRepository.search(query)
-            _gifs.postValue(result)
+            withContext(Dispatchers.Main) {
+                _gifs.postValue(result)
+            }
         }
     }
 
