@@ -1,15 +1,15 @@
-package com.artur.giphyapp.ui.favourite
+package com.artur.giphyapp.favourite
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.artur.giphyapp.data.local.GifItem
 import com.artur.giphyapp.databinding.FavouriteFragmentBinding
-import com.artur.giphyapp.ui.adapter.GifAdapter
+import com.artur.giphyapp.extensions.setDisplayHomeAsUpEnabled
+import com.artur.giphyapp.home.adapter.GifAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FavouriteFragment : Fragment(), GifAdapter.OnItemClickListener {

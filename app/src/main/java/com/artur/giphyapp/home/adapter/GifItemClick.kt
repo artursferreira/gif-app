@@ -1,4 +1,4 @@
-package com.artur.giphyapp.ui.adapter
+package com.artur.giphyapp.home.adapter
 
 import com.artur.giphyapp.data.local.GifItem
 

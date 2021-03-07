@@ -1,7 +1,6 @@
-package com.artur.giphyapp.ui.home
+package com.artur.giphyapp.home
 
 import androidx.lifecycle.*
-import com.artur.giphyapp.data.local.GifDao
 import com.artur.giphyapp.data.local.GifItem
 import com.artur.giphyapp.data.remote.Result
 import com.artur.giphyapp.data.remote.giphy.repository.GiphyRepository

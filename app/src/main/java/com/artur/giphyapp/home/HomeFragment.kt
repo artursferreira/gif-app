@@ -1,17 +1,16 @@
-package com.artur.giphyapp.ui.home
+package com.artur.giphyapp.home
 
 import android.os.Bundle
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.artur.giphyapp.R
 import com.artur.giphyapp.data.local.GifItem
 import com.artur.giphyapp.data.remote.Result
 import com.artur.giphyapp.databinding.HomeFragmentBinding
-import com.artur.giphyapp.ui.adapter.GifAdapter
+import com.artur.giphyapp.home.adapter.GifAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomeFragment : Fragment(), SearchView.OnQueryTextListener,
@@ -30,6 +29,7 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener,
     ): View {
 
         _binding = HomeFragmentBinding.inflate(inflater, container, false)
+        setHasOptionsMenu(true)
 
         return binding.root
     }
@@ -72,6 +72,27 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener,
                 }
             }
         })
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, menuInflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, menuInflater)
+
+        menuInflater.inflate(R.menu.main_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.favourites -> {
+                findNavController().navigate(R.id.favouriteFragment)
+                return true
+            }
+            R.id.settings -> {
+                findNavController().navigate(R.id.settingsFragment)
+                return true
+            }
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onDestroyView() {

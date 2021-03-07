@@ -1,8 +1,7 @@
-package com.artur.giphyapp.ui.adapter
+package com.artur.giphyapp.home.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.AdapterView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
