@@ -3,13 +3,8 @@ package com.artur.giphyapp.di
 
 import android.app.DownloadManager
 import android.app.NotificationManager
-import android.os.Build.VERSION.SDK_INT
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.room.Room
-import coil.ImageLoader
-import coil.decode.GifDecoder
-import coil.decode.ImageDecoderDecoder
 import com.artur.giphyapp.BuildConfig
 import com.artur.giphyapp.data.local.AppDatabase
 import okhttp3.OkHttpClient
