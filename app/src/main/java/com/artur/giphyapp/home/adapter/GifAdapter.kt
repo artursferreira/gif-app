@@ -1,18 +1,23 @@
 package com.artur.giphyapp.home.adapter
 
+import android.content.Context
+import android.os.Build.VERSION.SDK_INT
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import coil.ImageLoader
+import coil.decode.GifDecoder
+import coil.decode.ImageDecoderDecoder
+import coil.load
 import com.artur.giphyapp.R
 import com.artur.giphyapp.data.local.GifItem
 import com.artur.giphyapp.databinding.GifItemBinding
 import com.artur.giphyapp.extensions.dp
 import com.artur.giphyapp.extensions.performHapticFeedback
-import com.artur.giphyapp.extensions.setLayoutHeight
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
+import com.artur.giphyapp.extensions.setLayoutSize
+import org.koin.android.ext.koin.androidContext
 
 
 class GifAdapter(private val itemClickListener: OnItemClickListener) :
@@ -50,13 +55,19 @@ class GifAdapter(private val itemClickListener: OnItemClickListener) :
         RecyclerView.ViewHolder(itemBinding.root) {
         fun bind(gifItem: GifItem, clickListener: OnItemClickListener) {
             with(itemBinding) {
-                gif.setLayoutHeight(gifItem.width.dp, gifItem.height.dp)
-                Glide.with(gif.context)
-                    .asGif()
-                    .transition(withCrossFade())
-                    .load(gifItem.url)
-                    .placeholder(R.drawable.progress_anim)
-                    .into(gif)
+                //gif.setLayoutSize(gifItem.width.dp, gifItem.height.dp)
+                gif.load(gifItem.url, ImageLoader.Builder(gif.context)
+                    .componentRegistry {
+                        if (SDK_INT >= 28) {
+                            add(ImageDecoderDecoder())
+                        } else {
+                            add(GifDecoder())
+                        }
+                    }
+                    .build()) {
+                    crossfade(true)
+                    placeholder(R.drawable.progress_anim)
+                }
 
                 favouriteButton.isSelected = gifItem.isFavourite
                 favouriteButton.performHapticFeedback()

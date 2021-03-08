@@ -56,7 +56,7 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener,
         super.onViewCreated(view, savedInstanceState)
 
         setupRecyclerView()
-        binding.searchView.setOnQueryTextListener(this)
+      setupSearchView()
         observeGifs()
         observeFavorites()
     }
@@ -92,6 +92,15 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener,
             recyclerview.layoutManager =
                 StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
             recyclerview.adapter = adapter
+        }
+    }
+
+    private fun setupSearchView() {
+        with(binding) {
+            searchView.setOnQueryTextListener(this@HomeFragment)
+            searchView.isFocusable = false
+            searchView.isIconified = false
+            searchView.clearFocus()
         }
     }
 

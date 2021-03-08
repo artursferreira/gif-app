@@ -22,7 +22,7 @@ fun GifResult.mapToGifItem(): List<GifItem> {
     }
 }
 
-fun View.setLayoutHeight(width: Int, height: Int) {
+fun View.setLayoutSize(width: Int, height: Int) {
     layoutParams.apply {
         this.width = width * 3
         this.height = height * 3
