@@ -14,12 +14,15 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import com.artur.giphyapp.R
 import com.artur.giphyapp.data.local.GifItem
 import com.artur.giphyapp.databinding.FragmentMenuBinding
+import com.artur.giphyapp.utils.sendNotification
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.navigation.NavigationView
 import org.koin.android.ext.android.inject
+import java.io.File
 
 /**
  * Created by artur on 04/08/2018.
@@ -32,13 +35,17 @@ class MenuFragment : BottomSheetDialogFragment(), NavigationView.OnNavigationIte
     private val downloadManager: DownloadManager by inject()
     private val notificationManager: NotificationManager by inject()
 
+    private var gifItem: GifItem? = null
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         _binding = FragmentMenuBinding.inflate(inflater, container, false)
+
+        gifItem = arguments?.get(KEY_GIF) as GifItem?
 
         return binding.root
     }
@@ -58,16 +65,16 @@ class MenuFragment : BottomSheetDialogFragment(), NavigationView.OnNavigationIte
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.download) {
-            val gifItem: GifItem? = arguments?.get(KEY_GIF) as GifItem?
-            if (gifItem != null) {
+            gifItem?.let {
+                val fileName = it.id + ".gif"
                 val request =
-                    DownloadManager.Request(Uri.parse(gifItem.url))
-                        .setTitle(getString(R.string.app_name))
+                    DownloadManager.Request(Uri.parse(it.url))
+                        .setTitle(fileName)
                         .setDescription("Downloading gif...")
                         .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
                         .setDestinationInExternalPublicDir(
                             Environment.DIRECTORY_DOWNLOADS,
-                            gifItem.id + ".gif"
+                            fileName
                         )
                         .setAllowedOverMetered(true)
                         .setAllowedOverRoaming(true)
@@ -96,13 +103,16 @@ class MenuFragment : BottomSheetDialogFragment(), NavigationView.OnNavigationIte
             if (cursor.moveToFirst()) {
                 val status: Int =
                     cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS))
-                /* notificationManager = getSystemService(AppCompatActivity.NOTIFICATION_SERVICE) as NotificationManager
 
-                 notificationManager.sendNotification(
-                     getString(selectedUrl.text),
-                     status,
-                     applicationContext
-                 )*/
+                val fileName = gifItem?.id + ".gif"
+                notificationManager.sendNotification(
+                    context!!,
+                    notificationManager,
+                    File(
+                        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+                        fileName
+                    )
+                )
 
             } else {
                 // download is cancelled

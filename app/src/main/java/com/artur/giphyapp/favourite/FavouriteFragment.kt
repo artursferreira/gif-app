@@ -10,6 +10,7 @@ import com.artur.giphyapp.data.local.GifItem
 import com.artur.giphyapp.databinding.FavouriteFragmentBinding
 import com.artur.giphyapp.extensions.setDisplayHomeAsUpEnabled
 import com.artur.giphyapp.home.adapter.GifAdapter
+import com.artur.giphyapp.home.adapter.MenuFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FavouriteFragment : Fragment(), GifAdapter.OnItemClickListener {
@@ -73,7 +74,14 @@ class FavouriteFragment : Fragment(), GifAdapter.OnItemClickListener {
     }
 
     override fun onItemClicked(gifItem: GifItem, share: Boolean) {
-        viewModel.saveFavourite(gifItem)
+        if (!share)
+            viewModel.saveFavourite(gifItem)
+        else {
+            val menuFragment = MenuFragment()
+            val args = Bundle().apply { putParcelable(MenuFragment.KEY_GIF, gifItem) }
+            menuFragment.arguments = args
+            menuFragment.show(childFragmentManager, "tag")
+        }
     }
 
 }
