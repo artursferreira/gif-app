@@ -19,6 +19,7 @@ import androidx.core.content.FileProvider
 import com.artur.giphyapp.R
 import com.artur.giphyapp.data.local.GifItem
 import com.artur.giphyapp.databinding.FragmentMenuBinding
+import com.artur.giphyapp.utils.ProgressBarDialog
 import com.artur.giphyapp.utils.sendNotification
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.navigation.NavigationView
@@ -38,6 +39,8 @@ class MenuFragment : BottomSheetDialogFragment(), NavigationView.OnNavigationIte
     private val notificationManager: NotificationManager by inject()
 
     private var gifItem: GifItem? = null
+
+    private var progressBar: ProgressBarDialog? = null
 
     private var shouldShare = false
     var downloadId = -1L
@@ -60,6 +63,8 @@ class MenuFragment : BottomSheetDialogFragment(), NavigationView.OnNavigationIte
 
         activity?.registerReceiver(receiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
         binding.navigationView.setNavigationItemSelectedListener(this)
+
+        progressBar = ProgressBarDialog(requireContext())
 
     }
 
@@ -88,7 +93,12 @@ class MenuFragment : BottomSheetDialogFragment(), NavigationView.OnNavigationIte
             downloadId = downloadManager.enqueue(request)
         }
 
+        if (shouldShare) {
+            progressBar?.show()
+        }
+
         dismiss()
+
         return false
     }
 
@@ -141,6 +151,7 @@ class MenuFragment : BottomSheetDialogFragment(), NavigationView.OnNavigationIte
     }
 
     private fun shareFile(context: Context) {
+        progressBar?.dismiss()
         gifItem?.let {
             val fileName = it.id + ".gif"
             val share = Intent(Intent.ACTION_SEND)
