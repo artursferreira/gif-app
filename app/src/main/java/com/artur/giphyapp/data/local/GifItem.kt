@@ -10,7 +10,8 @@ import kotlinx.parcelize.Parcelize
 data class GifItem(
     @PrimaryKey val id: String,
     val title: String,
-    val url: String,
+    val gifUrl: String,
+    val webpUrl: String,
     val width: Int,
     val height: Int,
     var isFavourite: Boolean = false

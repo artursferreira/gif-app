@@ -7,6 +7,7 @@ import com.artur.giphyapp.di.favouriteModule
 import com.artur.giphyapp.di.homeModule
 import com.artur.giphyapp.di.mainModule
 import com.artur.giphyapp.di.networkModule
+import com.facebook.drawee.backends.pipeline.Fresco
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
@@ -19,5 +20,7 @@ class GiphyApp : Application() {
             androidContext(applicationContext)
             modules(listOf(mainModule, networkModule, dbModule, giphyModule, mainModule, homeModule, favouriteModule))
         }
+
+        Fresco.initialize(this)
     }
 }

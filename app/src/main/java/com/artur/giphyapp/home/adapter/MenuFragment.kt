@@ -68,7 +68,7 @@ class MenuFragment : BottomSheetDialogFragment(), NavigationView.OnNavigationIte
             gifItem?.let {
                 val fileName = it.id + ".gif"
                 val request =
-                    DownloadManager.Request(Uri.parse(it.url))
+                    DownloadManager.Request(Uri.parse(it.gifUrl))
                         .setTitle(fileName)
                         .setDescription("Downloading gif...")
                         .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)

@@ -1,5 +1,6 @@
 package com.artur.giphyapp.home.adapter
 
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -8,11 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.artur.giphyapp.R
 import com.artur.giphyapp.data.local.GifItem
 import com.artur.giphyapp.databinding.GifItemBinding
-import com.artur.giphyapp.extensions.dp
 import com.artur.giphyapp.extensions.performHapticFeedback
-import com.artur.giphyapp.extensions.setLayoutSize
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
+import com.facebook.drawee.backends.pipeline.Fresco
 
 
 class GifAdapter(private val itemClickListener: OnItemClickListener) :
@@ -50,13 +48,14 @@ class GifAdapter(private val itemClickListener: OnItemClickListener) :
         RecyclerView.ViewHolder(itemBinding.root) {
         fun bind(gifItem: GifItem, clickListener: OnItemClickListener) {
             with(itemBinding) {
-                gif.setLayoutSize(gifItem.width.dp, gifItem.height.dp)
-                Glide.with(gif.context)
-                    .asGif()
-                    .transition(withCrossFade())
-                    .load(gifItem.url)
-                    .placeholder(R.drawable.progress_anim)
-                    .into(gif)
+
+                val controller = Fresco.newDraweeControllerBuilder()
+                    .setUri(Uri.parse(gifItem.webpUrl))
+                    .setAutoPlayAnimations(true)
+                    .build()
+
+                gif.hierarchy.setPlaceholderImage(R.drawable.progress_anim)
+                gif.controller = controller
 
                 favouriteButton.isSelected = gifItem.isFavourite
                 favouriteButton.performHapticFeedback()

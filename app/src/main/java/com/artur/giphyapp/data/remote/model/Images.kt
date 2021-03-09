@@ -4,5 +4,5 @@ import com.google.gson.annotations.SerializedName
 
 
 data class Images(
-   @SerializedName("fixed_height") val downsized: Downsized
+   @SerializedName("fixed_height") val fixedHeight: FixedHeight
 )

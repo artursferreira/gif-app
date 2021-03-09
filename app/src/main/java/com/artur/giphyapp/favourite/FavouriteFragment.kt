@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.artur.giphyapp.data.local.GifItem
 import com.artur.giphyapp.databinding.FavouriteFragmentBinding
@@ -47,8 +48,7 @@ class FavouriteFragment : Fragment(), GifAdapter.OnItemClickListener {
 
     private fun setupRecyclerView() {
         with(binding) {
-            recyclerview.layoutManager =
-                StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+            recyclerview.layoutManager = GridLayoutManager(context, 2)
             recyclerview.adapter = adapter
         }
     }
