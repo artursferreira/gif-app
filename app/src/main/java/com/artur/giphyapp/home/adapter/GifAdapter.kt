@@ -1,6 +1,7 @@
 package com.artur.giphyapp.home.adapter
 
 import android.net.Uri
+import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -9,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.artur.giphyapp.R
 import com.artur.giphyapp.data.local.GifItem
 import com.artur.giphyapp.databinding.GifItemBinding
-import com.artur.giphyapp.extensions.performHapticFeedback
 import com.facebook.drawee.backends.pipeline.Fresco
 
 
@@ -35,18 +35,38 @@ class GifAdapter(private val itemClickListener: OnItemClickListener) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GifViewHolder {
         val itemBinding = GifItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return GifViewHolder(itemBinding)
+
+        val holder = GifViewHolder(itemBinding)
+
+        itemBinding.favouriteButton.setOnClickListener {
+            it?.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+            val item = getItem(holder.adapterPosition)
+            itemClickListener.onItemClicked(
+                item.copy(
+                    isFavourite = !item.isFavourite
+                )
+            )
+        }
+
+        itemBinding.shareButton.setOnClickListener {
+            it?.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+            val item = getItem(holder.adapterPosition)
+            itemClickListener.onItemClicked(item, true)
+        }
+
+        return holder
     }
 
     override fun onBindViewHolder(holder: GifViewHolder, position: Int) {
         val item = getItem(position)
         item.isFavourite = favourites.contains(item.id)
-        holder.bind(item, itemClickListener)
+        holder.bind(item)
     }
 
     class GifViewHolder(private val itemBinding: GifItemBinding) :
         RecyclerView.ViewHolder(itemBinding.root) {
-        fun bind(gifItem: GifItem, clickListener: OnItemClickListener) {
+
+        fun bind(gifItem: GifItem) {
             with(itemBinding) {
                 val controller = Fresco.newDraweeControllerBuilder()
                     .setUri(Uri.parse(gifItem.webpUrl))
@@ -57,19 +77,7 @@ class GifAdapter(private val itemClickListener: OnItemClickListener) :
                 gif.controller = controller
 
                 favouriteButton.isSelected = gifItem.isFavourite
-                favouriteButton.performHapticFeedback()
-                shareButton.performHapticFeedback()
-                favouriteButton.setOnClickListener {
-                    clickListener.onItemClicked(
-                        gifItem.copy(
-                            isFavourite = !gifItem.isFavourite
-                        )
-                    )
-                }
 
-                shareButton.setOnClickListener {
-                    clickListener.onItemClicked(gifItem, true)
-                }
             }
         }
     }

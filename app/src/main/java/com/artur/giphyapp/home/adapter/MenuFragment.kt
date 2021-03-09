@@ -14,6 +14,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.FileProvider
 import com.artur.giphyapp.R
 import com.artur.giphyapp.data.local.GifItem
@@ -37,6 +38,9 @@ class MenuFragment : BottomSheetDialogFragment(), NavigationView.OnNavigationIte
     private val notificationManager: NotificationManager by inject()
 
     private var gifItem: GifItem? = null
+
+    private var shouldShare = false
+    var downloadId = -1L
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -65,44 +69,23 @@ class MenuFragment : BottomSheetDialogFragment(), NavigationView.OnNavigationIte
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.download) {
-            gifItem?.let {
-                val fileName = it.id + ".gif"
-                val request =
-                    DownloadManager.Request(Uri.parse(it.gifUrl))
-                        .setTitle(fileName)
-                        .setDescription("Downloading gif...")
-                        .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
-                        .setDestinationInExternalPublicDir(
-                            Environment.DIRECTORY_DOWNLOADS,
-                            fileName
-                        )
-                        .setAllowedOverMetered(true)
-                        .setAllowedOverRoaming(true)
+        shouldShare = item.itemId == R.id.share
 
-                downloadManager.enqueue(request)
-            }
-        } else if (item.itemId == R.id.share) {
-            gifItem?.let {
-                val share = Intent(Intent.ACTION_SEND)
+        gifItem?.let {
+            val fileName = it.id + ".gif"
+            val request =
+                DownloadManager.Request(Uri.parse(it.gifUrl))
+                    .setTitle(fileName)
+                    .setDescription("Downloading gif...")
+                    .setNotificationVisibility(if (shouldShare) DownloadManager.Request.VISIBILITY_HIDDEN else DownloadManager.Request.VISIBILITY_VISIBLE)
+                    .setDestinationInExternalPublicDir(
+                        Environment.DIRECTORY_DOWNLOADS,
+                        fileName
+                    )
+                    .setAllowedOverMetered(true)
+                    .setAllowedOverRoaming(true)
 
-                share.type = "image/gif"
-
-                val fileName = it.id + ".gif"
-                val imageFile = File(
-                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
-                    fileName
-                )
-
-                val uri = FileProvider.getUriForFile(
-                    requireContext(),
-                    requireContext().packageName + ".provider",
-                    imageFile
-                )
-                share.putExtra(Intent.EXTRA_STREAM, uri)
-
-                startActivity(Intent.createChooser(share, "Share GIF"))
-            }
+            downloadId = downloadManager.enqueue(request)
         }
 
         dismiss()
@@ -121,22 +104,62 @@ class MenuFragment : BottomSheetDialogFragment(), NavigationView.OnNavigationIte
             val cursor: Cursor =
                 downloadManager.query(downloadId?.let { DownloadManager.Query().setFilterById(it) })
             if (cursor.moveToFirst()) {
-                val status: Int =
-                    cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS))
 
-                val fileName = gifItem?.id + ".gif"
-                notificationManager.sendNotification(
-                    context!!,
-                    notificationManager,
-                    File(
-                        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
-                        fileName
-                    )
-                )
+                val status = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS))
+
+                if (downloadId == this@MenuFragment.downloadId)
+                    when (status) {
+                        DownloadManager.STATUS_SUCCESSFUL -> {
+                            if (shouldShare)
+                                shareFile(context!!)
+                            else {
+                                val fileName = gifItem?.id + ".gif"
+                                notificationManager.sendNotification(
+                                    context!!,
+                                    notificationManager,
+                                    File(
+                                        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+                                        fileName
+                                    )
+                                )
+                            }
+                        }
+                        DownloadManager.STATUS_FAILED -> {
+                            Toast.makeText(
+                                context!!,
+                                getString(R.string.download_error),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+
+                    }
 
             } else {
                 // download is cancelled
             }
+        }
+    }
+
+    private fun shareFile(context: Context) {
+        gifItem?.let {
+            val fileName = it.id + ".gif"
+            val share = Intent(Intent.ACTION_SEND)
+
+            share.type = "image/gif"
+
+            val imageFile = File(
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+                fileName
+            )
+
+            val uri = FileProvider.getUriForFile(
+                context,
+                context.packageName + ".provider",
+                imageFile
+            )
+            share.putExtra(Intent.EXTRA_STREAM, uri)
+
+            context.startActivity(Intent.createChooser(share, "Share GIF"))
         }
     }
 
