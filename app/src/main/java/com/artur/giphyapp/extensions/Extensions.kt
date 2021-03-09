@@ -48,11 +48,11 @@ fun Fragment.setDisplayHomeAsUpEnabled(bool: Boolean) {
 }
 
 fun View.performHapticFeedback() {
+
     this.setOnTouchListener { v, event ->
         if (event.action == MotionEvent.ACTION_DOWN)
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-                this.performHapticFeedback(HapticFeedbackConstants.CONTEXT_CLICK)
-            }
+            this.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+
         v.performClick()
         v.onTouchEvent(event)
     }

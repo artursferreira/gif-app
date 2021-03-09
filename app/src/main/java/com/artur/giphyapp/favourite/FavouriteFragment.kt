@@ -1,15 +1,12 @@
 package com.artur.giphyapp.favourite
 
 import android.os.Bundle
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.artur.giphyapp.R
 import com.artur.giphyapp.data.local.GifItem
 import com.artur.giphyapp.databinding.FavouriteFragmentBinding
-import com.artur.giphyapp.extensions.setDisplayHomeAsUpEnabled
 import com.artur.giphyapp.home.adapter.GifAdapter
 import com.artur.giphyapp.home.adapter.MenuFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -28,6 +25,7 @@ class FavouriteFragment : Fragment(), GifAdapter.OnItemClickListener {
         savedInstanceState: Bundle?
     ): View {
 
+        setHasOptionsMenu(true)
         _binding = FavouriteFragmentBinding.inflate(inflater, container, false)
 
         return binding.root
@@ -38,7 +36,23 @@ class FavouriteFragment : Fragment(), GifAdapter.OnItemClickListener {
 
         setupRecyclerView()
         observeFavorites()
+    }
 
+    override fun onCreateOptionsMenu(menu: Menu, menuInflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, menuInflater)
+
+        menuInflater.inflate(R.menu.favourites_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.clear_favourites -> {
+                viewModel.deleteAllFavourites()
+                return true
+            }
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onDestroyView() {

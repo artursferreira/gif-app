@@ -14,7 +14,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.FileProvider
 import com.artur.giphyapp.R
 import com.artur.giphyapp.data.local.GifItem
 import com.artur.giphyapp.databinding.FragmentMenuBinding
@@ -23,6 +23,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.navigation.NavigationView
 import org.koin.android.ext.android.inject
 import java.io.File
+
 
 /**
  * Created by artur on 04/08/2018.
@@ -82,7 +83,26 @@ class MenuFragment : BottomSheetDialogFragment(), NavigationView.OnNavigationIte
                 downloadManager.enqueue(request)
             }
         } else if (item.itemId == R.id.share) {
+            gifItem?.let {
+                val share = Intent(Intent.ACTION_SEND)
 
+                share.type = "image/gif"
+
+                val fileName = it.id + ".gif"
+                val imageFile = File(
+                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+                    fileName
+                )
+
+                val uri = FileProvider.getUriForFile(
+                    requireContext(),
+                    requireContext().packageName + ".provider",
+                    imageFile
+                )
+                share.putExtra(Intent.EXTRA_STREAM, uri)
+
+                startActivity(Intent.createChooser(share, "Share GIF"))
+            }
         }
 
         dismiss()

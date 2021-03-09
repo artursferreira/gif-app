@@ -48,7 +48,6 @@ class GifAdapter(private val itemClickListener: OnItemClickListener) :
         RecyclerView.ViewHolder(itemBinding.root) {
         fun bind(gifItem: GifItem, clickListener: OnItemClickListener) {
             with(itemBinding) {
-
                 val controller = Fresco.newDraweeControllerBuilder()
                     .setUri(Uri.parse(gifItem.webpUrl))
                     .setAutoPlayAnimations(true)
@@ -59,6 +58,7 @@ class GifAdapter(private val itemClickListener: OnItemClickListener) :
 
                 favouriteButton.isSelected = gifItem.isFavourite
                 favouriteButton.performHapticFeedback()
+                shareButton.performHapticFeedback()
                 favouriteButton.setOnClickListener {
                     clickListener.onItemClicked(
                         gifItem.copy(

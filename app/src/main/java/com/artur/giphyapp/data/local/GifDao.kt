@@ -21,4 +21,7 @@ interface GifDao {
     @Delete
     fun delete(gif: GifItem)
 
+    @Query("DELETE FROM Favourites WHERE isFavourite == 1")
+    fun deleteAllFavourites()
+
 }

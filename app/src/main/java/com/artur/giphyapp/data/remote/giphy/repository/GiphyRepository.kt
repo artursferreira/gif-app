@@ -33,4 +33,8 @@ class GiphyRepository(
         dao.insertAll(gifItem)
     }
 
+    suspend fun deleteAllFavourites() {
+        dao.deleteAllFavourites()
+    }
+
 }

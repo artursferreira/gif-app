@@ -21,4 +21,12 @@ class FavouriteViewModel(
             }
         }
     }
+
+    fun deleteAllFavourites() {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                giphyRepository.deleteAllFavourites()
+            }
+        }
+    }
 }
