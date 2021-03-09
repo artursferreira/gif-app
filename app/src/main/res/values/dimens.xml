@@ -4,5 +4,6 @@
     <dimen name="card_corner_radius">4dp</dimen>
     <dimen name="gif_card_margin">2dp</dimen>
     <dimen name="favourite_button_size">30dp</dimen>
+    <dimen name="share_button_size">24dp</dimen>
     <dimen name="favourite_button_margin">10dp</dimen>
 </resources>

@@ -3,15 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/favourites"
-        android:icon="@drawable/ic_favourite_menu"
-        android:title="@string/favourites_title"
+        android:id="@+id/download"
+        android:icon="@drawable/ic_download"
+        android:title="@string/download_gif"
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/settings"
-        android:icon="@drawable/ic_settings"
-        android:title="@string/settings_title"
+        android:id="@+id/share"
+        android:icon="@drawable/ic_share"
+        android:title="@string/share_gif"
         app:showAsAction="always" />
 
 </menu>

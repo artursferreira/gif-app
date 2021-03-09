@@ -4,7 +4,6 @@ import android.content.res.Resources
 import android.view.HapticFeedbackConstants
 import android.view.MotionEvent
 import android.view.View
-import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.artur.giphyapp.data.local.GifItem
@@ -15,14 +14,15 @@ fun GifResult.mapToGifItem(): List<GifItem> {
         GifItem(
             id = it.id,
             title = it.title,
-            width = it.images.downsized.width,
-            height = it.images.downsized.height,
-            url = it.images.downsized.url
+            width = it.images.fixedHeight.width,
+            height = it.images.fixedHeight.height,
+            gifUrl = it.images.fixedHeight.gifUrl,
+            webpUrl = it.images.fixedHeight.webpUrl
         )
     }
 }
 
-fun View.setLayoutHeight(width: Int, height: Int) {
+fun View.setLayoutSize(width: Int, height: Int) {
     layoutParams.apply {
         this.width = width * 3
         this.height = height * 3

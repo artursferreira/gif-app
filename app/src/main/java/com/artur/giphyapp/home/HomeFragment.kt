@@ -2,16 +2,23 @@ package com.artur.giphyapp.home
 
 import android.os.Bundle
 import android.view.*
-import androidx.fragment.app.Fragment
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.doOnLayout
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import com.artur.giphyapp.R
 import com.artur.giphyapp.data.local.GifItem
 import com.artur.giphyapp.data.remote.Result
 import com.artur.giphyapp.databinding.HomeFragmentBinding
 import com.artur.giphyapp.home.adapter.GifAdapter
+import com.artur.giphyapp.home.adapter.MenuFragment
+import com.artur.giphyapp.home.adapter.MenuFragment.Companion.KEY_GIF
 import org.koin.androidx.viewmodel.ext.android.viewModel
+
 
 class HomeFragment : Fragment(), SearchView.OnQueryTextListener,
     GifAdapter.OnItemClickListener {
@@ -23,12 +30,14 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener,
 
     private val adapter = GifAdapter(this)
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
 
         _binding = HomeFragmentBinding.inflate(inflater, container, false)
+
         setHasOptionsMenu(true)
 
         return binding.root
@@ -38,7 +47,7 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener,
         super.onViewCreated(view, savedInstanceState)
 
         setupRecyclerView()
-        binding.searchView.setOnQueryTextListener(this)
+        setupSearchView()
         observeGifs()
         observeFavorites()
     }
@@ -71,9 +80,18 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener,
 
     private fun setupRecyclerView() {
         with(binding) {
-            recyclerview.layoutManager =
-                StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+            recyclerview.layoutManager = GridLayoutManager(context, 2)
             recyclerview.adapter = adapter
+            recyclerview.setHasFixedSize(true)
+        }
+    }
+
+    private fun setupSearchView() {
+        with(binding) {
+            searchView.setOnQueryTextListener(this@HomeFragment)
+            searchView.isFocusable = false
+            searchView.isIconified = false
+            searchView.clearFocus()
         }
     }
 
@@ -115,10 +133,6 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener,
 
     }
 
-    private fun getTrending() {
-       viewModel.getTrendingGifs()
-    }
-
     override fun onQueryTextSubmit(query: String?): Boolean {
         onTextSearched(query)
         return true
@@ -130,13 +144,18 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener,
     }
 
     private fun onTextSearched(text: String?) {
-        if (!text.isNullOrEmpty())
+        if (text != null)
             viewModel.search(text)
-        else
-            getTrending()
     }
 
-    override fun onItemClicked(gifItem: GifItem) {
-        viewModel.saveFavourite(gifItem)
+    override fun onItemClicked(gifItem: GifItem, share: Boolean) {
+        if (!share)
+            viewModel.saveFavourite(gifItem)
+        else {
+            val menuFragment = MenuFragment()
+            val args = Bundle().apply { putParcelable(KEY_GIF, gifItem) }
+            menuFragment.arguments = args
+            menuFragment.show(childFragmentManager, "tag")
+        }
     }
 }

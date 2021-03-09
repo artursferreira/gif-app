@@ -1,11 +1,15 @@
 package com.artur.giphyapp.di
 
 
+import android.app.DownloadManager
+import android.app.NotificationManager
+import androidx.appcompat.app.AppCompatActivity
 import androidx.room.Room
 import com.artur.giphyapp.BuildConfig
 import com.artur.giphyapp.data.local.AppDatabase
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -59,5 +63,6 @@ val dbModule = module {
 
 val mainModule = module {
 
-
+    single { androidContext().getSystemService(AppCompatActivity.DOWNLOAD_SERVICE) as DownloadManager }
+    single { androidContext().getSystemService(AppCompatActivity.NOTIFICATION_SERVICE) as NotificationManager }
 }

@@ -33,7 +33,9 @@ class HomeViewModel(
 
     fun search(query: String?) {
         viewModelScope.launch {
-            val result = giphyRepository.search(query)
+            val result = withContext(Dispatchers.IO) {
+                if (!query.isNullOrEmpty()) giphyRepository.search(query) else giphyRepository.getTrendingGifs()
+            }
             withContext(Dispatchers.Main) {
                 _gifs.postValue(result)
             }
