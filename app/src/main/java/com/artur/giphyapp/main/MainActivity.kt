@@ -1,27 +1,27 @@
 package com.artur.giphyapp.main
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.navigation.NavController
-import androidx.navigation.Navigation
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupWithNavController
 import com.artur.giphyapp.R
 import com.artur.giphyapp.databinding.ActivityMainBinding
-import com.google.android.material.tabs.TabLayoutMediator
-import java.util.jar.Manifest
+import com.artur.giphyapp.extensions.getAppTheme
+import org.koin.android.ext.android.inject
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var appBarConfiguration: AppBarConfiguration
+
+    private val preferences: SharedPreferences by inject()
 
     private val requestPermission =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
@@ -35,6 +35,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        setupAppTheme()
 
         binding = ActivityMainBinding.inflate(layoutInflater)
 
@@ -53,6 +55,13 @@ class MainActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         return findNavController(R.id.nav_host_fragment).navigateUp(appBarConfiguration) ||
                 super.onSupportNavigateUp()
+    }
+
+    private fun setupAppTheme() {
+        val themeId = preferences.getString(getString(R.string.pref_key_night), "")
+        themeId?.let {
+            AppCompatDelegate.setDefaultNightMode(getAppTheme(it))
+        }
     }
 
 }

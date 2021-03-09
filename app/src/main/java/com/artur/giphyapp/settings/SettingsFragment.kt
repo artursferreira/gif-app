@@ -1,43 +1,32 @@
 package com.artur.giphyapp.settings
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.artur.giphyapp.data.local.GifItem
-import com.artur.giphyapp.databinding.FavouriteFragmentBinding
-import com.artur.giphyapp.databinding.SettingsFragmentBinding
-import com.artur.giphyapp.extensions.setDisplayHomeAsUpEnabled
-import com.artur.giphyapp.home.adapter.GifAdapter
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.preference.Preference
+import androidx.preference.PreferenceFragmentCompat
+import com.artur.giphyapp.R
+import com.artur.giphyapp.extensions.getAppTheme
 
-class SettingsFragment : Fragment() {
+class SettingsFragment : PreferenceFragmentCompat() {
 
-    private var _binding: SettingsFragmentBinding? = null
-    private val binding get() = _binding!!
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-
-        _binding = SettingsFragmentBinding.inflate(inflater, container, false)
-
-        return binding.root
+    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+        setPreferencesFromResource(R.xml.preferences, rootKey)
+        val preference: Preference? = findPreference(getString(R.string.pref_key_night))
+        preference?.onPreferenceChangeListener = modeChangeListener
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    private val modeChangeListener =
+        Preference.OnPreferenceChangeListener { _, newValue ->
+            newValue?.let {
+                updateTheme(requireContext().getAppTheme(it as String))
+            }
 
+            true
+        }
 
+    private fun updateTheme(nightMode: Int): Boolean {
+        AppCompatDelegate.setDefaultNightMode(nightMode)
+        requireActivity().recreate()
+        return true
     }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
-
 }

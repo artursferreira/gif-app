@@ -1,6 +1,9 @@
 package com.artur.giphyapp.home
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.artur.giphyapp.data.local.GifItem
 import com.artur.giphyapp.data.remote.Result
 import com.artur.giphyapp.data.remote.giphy.repository.GiphyRepository
@@ -22,7 +25,7 @@ class HomeViewModel(
         getTrendingGifs()
     }
 
-    fun getTrendingGifs() {
+    private fun getTrendingGifs() {
         viewModelScope.launch {
             val trendingGifs = withContext(Dispatchers.IO) { giphyRepository.getTrendingGifs() }
             withContext(Dispatchers.Main) {

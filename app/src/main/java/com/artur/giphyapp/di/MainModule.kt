@@ -4,6 +4,7 @@ package com.artur.giphyapp.di
 import android.app.DownloadManager
 import android.app.NotificationManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.preference.PreferenceManager
 import androidx.room.Room
 import com.artur.giphyapp.BuildConfig
 import com.artur.giphyapp.data.local.AppDatabase
@@ -65,4 +66,5 @@ val mainModule = module {
 
     single { androidContext().getSystemService(AppCompatActivity.DOWNLOAD_SERVICE) as DownloadManager }
     single { androidContext().getSystemService(AppCompatActivity.NOTIFICATION_SERVICE) as NotificationManager }
+    single { PreferenceManager.getDefaultSharedPreferences(androidContext()) }
 }
