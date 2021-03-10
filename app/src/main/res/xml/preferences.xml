@@ -18,11 +18,10 @@
     <PreferenceCategory android:title="@string/pref_category_network">
 
         <SwitchPreference
-            android:defaultValue="true"
+            android:defaultValue="false"
             android:summary="@string/pref_key_gif_quality_summary"
             android:title="@string/pref_key_gif_quality_title"
             app:key="@string/pref_key_gif_quality" />
-
 
     </PreferenceCategory>
 
