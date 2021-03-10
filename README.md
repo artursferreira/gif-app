@@ -14,13 +14,10 @@ Lifecycle extensions, Room, Retrofit, Glide, Gson, Koin.
 ## Screens: ##
 
 <img src="./screenshots/main.png" alt="Main screen" width="256"/>
-
-![Main screen](https://github.com/artursferreira/gif-app/blob/main/screenshots/main.png?raw=true "Main screen")
-![Sharing content](https://github.com/artursferreira/gif-app/blob/main/screenshots/main_share.png?raw=true "Sharing content")
-![Search screen](https://github.com/artursferreira/gif-app/blob/main/screenshots/search.png?raw=true "Search")
-![Favourites screen](https://github.com/artursferreira/gif-app/blob/main/screenshots/favourites.png?raw=true "Favourites screen")
-![Settings screen](https://github.com/artursferreira/gif-app/blob/main/screenshots/settings.png?raw=true "Settings screen")
-
+<img src="./screenshots/main_share.png" alt="Sharing content" width="256"/>
+<img src="./screenshots/search.png" alt="Search screen" width="256"/>
+<img src="./screenshots/favourites.png" alt="Favourites screen" width="256"/>
+<img src="./screenshots/settings.png" alt="Settings screen" width="256"/>
 
 ## References##
 
