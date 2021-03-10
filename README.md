@@ -13,6 +13,8 @@ Lifecycle extensions, Room, Retrofit, Glide, Gson, Koin.
 
 ## Screens: ##
 
+<img src="./screenshots/main.png" alt="Main screen" width="256"/>
+
 ![Main screen](https://github.com/artursferreira/gif-app/blob/main/screenshots/main.png?raw=true "Main screen")
 ![Sharing content](https://github.com/artursferreira/gif-app/blob/main/screenshots/main_share.png?raw=true "Sharing content")
 ![Search screen](https://github.com/artursferreira/gif-app/blob/main/screenshots/search.png?raw=true "Search")
