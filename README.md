@@ -6,7 +6,6 @@ GIF App is an Android app which allows users to search, view, favourite, and dow
 
 * _Clone project from Github repository_
 * _Open and Run project in Android Studio_
-```
 
 ## Libraries used: ##
 
