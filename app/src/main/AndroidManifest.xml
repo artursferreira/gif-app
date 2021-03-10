@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.artur.giphyapp">
+    package="com.artur.gifapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
 
     <application
-        android:name=".GiphyApp"
-        android:allowBackup="true"
+        android:name="com.artur.gifapp.GifApp"
+        android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.GiphyApp">
-        <activity android:name=".main.MainActivity">
+        android:theme="@style/Theme.GifApp">
+        <activity android:name="com.artur.gifapp.main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
